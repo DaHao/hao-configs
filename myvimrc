@@ -1,1 +1,144 @@
-/Users/hao/.vimrc
+set nocompatible " 關閉與vi的兼容模式
+filetype off
+
+" Specify a directory for plugins
+call plug#begin('~/.vim/plugged')
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'Xuyuanp/nerdtree-git-plugin'    " 在nerdtree中顯示git的檔案變化
+Plug 'airblade/vim-gitgutter'         " 顯示git的修改記錄
+Plug 'scrooloose/syntastic'           " 程式碼檢查
+Plug 'vim-airline/vim-airline'        " 狀態欄
+Plug 'vim-airline/vim-airline-themes' " 狀態欄themes
+Plug 'terryma/vim-multiple-cursors'   " 多行輸入
+Plug 'pangloss/vim-javascript'        " javascript highlighting & indentation
+Plug 'mxw/vim-jsx'                    " jsx highlight
+" YCM 自動補齊
+Plug 'Valloric/YouCompleteMe', {'on': []}
+" 延遲載入YCM
+augroup loadYcm
+    autocmd!
+    autocmd InsertEnter * call plug#load('YouCompleteMe') | autocmd! loadYcm
+augroup END
+
+call plug#end()
+
+
+filetype plugin indent on
+syntax on
+
+set number          " 顯示行號
+set scrolloff=3     " 距離頂部和底部3行"
+set encoding=utf-8  " 編碼
+set fenc=utf-8      " 編碼
+set mouse=a         " 啟用鼠標
+set hlsearch        " 搜尋高亮
+set ignorecase      " 搜尋忽略大小寫
+set smartcase       " 但有大寫字母時不忽略
+set backupdir=~/.vim/backup//  " 讓vim 生成的~文件在指定位置
+set directory=~/.vim/swap//    " 讓vim 生成的swp檔在指定位置
+set undodir=~/.vim/undo//      " 讓vim 生成的un檔在指定位置
+set cindent         " 自動縮排
+"set textwidth=79    " 一行最大寬度
+set expandtab       " tab替換为空格键
+set confirm         " 遇到需確認動作時詢問
+set autowrite       " 失焦時自動存檔
+set autoread        " 檔案在其他地方修改時自動更新
+set showcmd         " 在右下角顯示現有命令
+set splitbelow      " More natural split opening
+set splitright
+set updatetime=100  " 設定vim-gitgutter的更新延遲時間
+
+set wildignore=*/node_modules/*,*/dist/*  " 搜尋時排除位置
+
+" The Silver Searcher
+" need installed silver-searcher
+if executable('ag')
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use CtrlP for listing files
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " no cache
+  " 我們大菁英sliver serch不需要cache加快速度
+  let g:ctrlp_use_caching = 0
+endif
+
+
+" 程式碼檢查設定
+ set statusline+=%#warningmsg#
+ set statusline+=%{SyntasticStatuslineFlag()}
+ set statusline+=%*
+ let g:syntastic_always_populate_loc_list = 1
+ let g:syntastic_auto_loc_list = 1
+ let g:syntastic_check_on_open = 0
+ let g:syntastic_check_on_wq = 0
+ let g:syntastic_javascript_checkers = ['standard']
+ let g:syntastic_javascript_standard_generic = 1
+ let g:syntastic_javascript_checkers = ['eslint']
+ let g:syntastic_javascript_eslint_exec = 'eslint'
+ let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': [] }
+
+
+" ==== vim-airline start ====
+set laststatus=2    " 永遠顯示狀態欄
+let g:airline_powerline_fonts = 1    " 支援 powerline 字體
+let g:airline#extensions#tabline#enabled = 1 " 顯示 tab 視窗及 buffer
+
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#show_tab_type = 0
+let g:airline#extensions#tabline#show_tab_nr = 1
+let g:airline#extensions#tabline#tab_nr_type = 1
+let g:airline#extensions#tabline#buffer_nr_show = 0
+let g:airline#extensions#branch#enabled = 1
+
+let g:airline_theme='badwolf'
+" ==== vim-ariline End ====
+
+" ==== YCM start ====
+set completeopt=longest,menu
+" ==== YCM end  ====
+
+" ==== vim-javascript start ====
+let g:javascript_plugin_flow = 1
+" ==== vim-javascript End ====
+
+" NERDTree Settings
+: let g:NERDTreeWinSize=30
+
+
+" map F5 to :NERDTree
+nnoremap <silent> <F5> :NERDTreeToggle<CR>
+
+" bind K to grep word under cursor
+" 按K就可以快速搜尋游標下字詞
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+
+" <C-w>E 啟動語法檢查
+nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
+
+" 快速切換視窗
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+" 開啟.py 時使用下列設定
+au BufNewFile,BufRead *.py
+    \ set fileformat=unix |  " 保存文件格式
+    \ set tabstop=4       |  " tab 寬度
+    \ set softtabstop=4   |
+    \ set shiftwidth=4
+    \ set textwidth=79
+    \ set expandtab
+    \ set autoindent
+
+" 開啟.js .jsx 時使用下列設定
+au BufNewFile,BufRead *.js,*.jsx
+    \ set tabstop=2      |
+    \ set softtabstop=2  |
+    \ set shiftwidth=2
+
