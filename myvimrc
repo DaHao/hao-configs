@@ -12,6 +12,8 @@ Plug 'vim-airline/vim-airline-themes' " 狀態欄themes
 Plug 'terryma/vim-multiple-cursors'   " 多行輸入
 Plug 'pangloss/vim-javascript'        " javascript highlighting & indentation
 Plug 'mxw/vim-jsx'                    " jsx highlight
+Plug 'mhinz/vim-startify'             " start screen
+Plug 'morhetz/gruvbox'                " color theme
 " YCM 自動補齊
 Plug 'Valloric/YouCompleteMe', {'on': []}
 " 延遲載入YCM
@@ -25,6 +27,18 @@ call plug#end()
 
 filetype plugin indent on
 syntax on
+
+" true color
+if has("termguicolors")
+    " fix bug for vim
+    set t_8f=^[[38;2;%lu;%lu;%lum
+    set t_8b=^[[48;2;%lu;%lu;%lum
+ 
+    " enable true color
+    set termguicolors
+endif
+set t_Co=256
+colorscheme gruvbox  " theme
 
 set number          " 顯示行號
 set scrolloff=3     " 距離頂部和底部3行"
@@ -47,6 +61,7 @@ set showcmd         " 在右下角顯示現有命令
 set splitbelow      " More natural split opening
 set splitright
 set updatetime=100  " 設定vim-gitgutter的更新延遲時間
+set clipboard=unnamed " 共用系統剪貼簿
 
 set wildignore=*/node_modules/*,*/dist/*  " 搜尋時排除位置
 
@@ -95,11 +110,12 @@ let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#tabline#buffer_nr_show = 0
 let g:airline#extensions#branch#enabled = 1
 
-let g:airline_theme='badwolf'
+let g:airline_theme='bubblegum'
 " ==== vim-ariline End ====
 
 " ==== YCM start ====
 set completeopt=longest,menu
+let g:ycm_goto_buffer_command = 'horizontal-split'
 " ==== YCM end  ====
 
 " ==== vim-javascript start ====
@@ -109,6 +125,11 @@ let g:javascript_plugin_flow = 1
 " NERDTree Settings
 : let g:NERDTreeWinSize=30
 
+" set <leader>
+let mapleader = ","
+
+nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>gd :YcmCompleter GoToDeclaration<CR>
 
 " map F5 to :NERDTree
 nnoremap <silent> <F5> :NERDTreeToggle<CR>
