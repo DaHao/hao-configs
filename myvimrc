@@ -10,6 +10,7 @@ Plug 'scrooloose/syntastic'           " 程式碼檢查
 Plug 'vim-airline/vim-airline'        " 狀態欄
 Plug 'vim-airline/vim-airline-themes' " 狀態欄themes
 Plug 'terryma/vim-multiple-cursors'   " 多行輸入
+Plug 'Yggdroot/indentLine'            " 加入outline
 Plug 'pangloss/vim-javascript'        " javascript highlighting & indentation
 Plug 'mxw/vim-jsx'                    " jsx highlight
 Plug 'mhinz/vim-startify'             " start screen
@@ -31,8 +32,8 @@ syntax on
 " true color
 if has("termguicolors")
     " fix bug for vim
-    set t_8f=^[[38;2;%lu;%lu;%lum
-    set t_8b=^[[48;2;%lu;%lu;%lum
+"    set t_8f=^[[38;2;%lu;%lu;%lum
+"    set t_8b=^[[48;2;%lu;%lu;%lum
  
     " enable true color
     set termguicolors
@@ -62,6 +63,7 @@ set splitbelow      " More natural split opening
 set splitright
 set updatetime=100  " 設定vim-gitgutter的更新延遲時間
 set clipboard=unnamed " 共用系統剪貼簿
+set switchbuf+=usetab,newtab  "將quickfix開至新tab上 
 
 set wildignore=*/node_modules/*,*/dist/*  " 搜尋時排除位置
 
