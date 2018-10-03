@@ -4,12 +4,11 @@ filetype off
 " Specify a directory for plugins
 call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'Xuyuanp/nerdtree-git-plugin'    " 在nerdtree中顯示git的檔案變化
-Plug 'airblade/vim-gitgutter'         " 顯示git的修改記錄
+Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }  " 在nerdtree中顯示git的檔案變化
+Plug 'airblade/vim-gitgutter'                                   " 顯示git的修改記錄
 Plug 'scrooloose/syntastic'           " 程式碼檢查
 Plug 'vim-airline/vim-airline'        " 狀態欄
 Plug 'vim-airline/vim-airline-themes' " 狀態欄themes
-Plug 'terryma/vim-multiple-cursors'   " 多行輸入
 Plug 'Yggdroot/indentLine'            " 加入outline
 Plug 'pangloss/vim-javascript'        " javascript highlighting & indentation
 Plug 'mxw/vim-jsx'                    " jsx highlight
@@ -39,38 +38,41 @@ if has("termguicolors")
     set termguicolors
 endif
 set t_Co=256
-colorscheme gruvbox  " theme
+colorscheme gruvbox   " theme
 
-set number          " 顯示行號
-set scrolloff=3     " 距離頂部和底部3行"
-set encoding=utf-8  " 編碼
-set fenc=utf-8      " 編碼
-set mouse=a         " 啟用鼠標
-set hlsearch        " 搜尋高亮
-set ignorecase      " 搜尋忽略大小寫
-set smartcase       " 但有大寫字母時不忽略
+set number            " 顯示行號
+set scrolloff=3       " 距離頂部和底部3行"
+set encoding=utf-8    " 編碼
+set fenc=utf-8        " 編碼
+set mouse=a           " 啟用鼠標
+set hlsearch          " 搜尋高亮
+set ignorecase        " 搜尋忽略大小寫
+set smartcase         " 但有大寫字母時不忽略
+set cindent           " 自動縮排
+"set textwidth=79      " 一行最大寬度
+set expandtab         " tab替換为空格键
+set confirm           " 遇到需確認動作時詢問
+set autowrite         " 失焦時自動存檔
+set autoread          " 檔案在其他地方修改時自動更新
+set showcmd           " 在右下角顯示現有命令
+set splitbelow        " More natural split opening
+set splitright
+set updatetime=100    " 設定vim-gitgutter的更新延遲時間
+set clipboard=unnamed " 共用系統剪貼簿
+set switchbuf+=usetab,newtab  "將quickfix開至新tab上 
+set fdm=indent        " 設定折疊
+set foldlevelstart=99 " 新打開文件時不折疊
+setlocal foldlevel=3  " 最高折疊3層
+
+set wildignore=*/node_modules/*,*/dist/*  " 搜尋時排除位置
 set backupdir=~/.vim/backup//  " 讓vim 生成的~文件在指定位置
 set directory=~/.vim/swap//    " 讓vim 生成的swp檔在指定位置
 set undodir=~/.vim/undo//      " 讓vim 生成的un檔在指定位置
-set cindent         " 自動縮排
-"set textwidth=79    " 一行最大寬度
-set expandtab       " tab替換为空格键
-set confirm         " 遇到需確認動作時詢問
-set autowrite       " 失焦時自動存檔
-set autoread        " 檔案在其他地方修改時自動更新
-set showcmd         " 在右下角顯示現有命令
-set splitbelow      " More natural split opening
-set splitright
-set updatetime=100  " 設定vim-gitgutter的更新延遲時間
-set clipboard=unnamed " 共用系統剪貼簿
-set switchbuf+=usetab,newtab  "將quickfix開至新tab上 
-
-set wildignore=*/node_modules/*,*/dist/*  " 搜尋時排除位置
 
 " The Silver Searcher
 " need installed silver-searcher
 if executable('ag')
-  set grepprg=ag\ --nogroup\ --nocolor
+  set grepprg=ag\ --nogroup\ --nocolor 
 
   " Use CtrlP for listing files
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
@@ -82,19 +84,18 @@ endif
 
 
 " 程式碼檢查設定
- set statusline+=%#warningmsg#
- set statusline+=%{SyntasticStatuslineFlag()}
- set statusline+=%*
- let g:syntastic_always_populate_loc_list = 1
- let g:syntastic_auto_loc_list = 1
- let g:syntastic_check_on_open = 0
- let g:syntastic_check_on_wq = 0
- let g:syntastic_javascript_checkers = ['standard']
- let g:syntastic_javascript_standard_generic = 1
- let g:syntastic_javascript_checkers = ['eslint']
- let g:syntastic_javascript_eslint_exec = 'eslint'
- let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': [] }
-
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_javascript_checkers = ['standard']
+let g:syntastic_javascript_standard_generic = 1
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_eslint_exec = 'eslint'
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': [] }
 
 " ==== vim-airline start ====
 set laststatus=2    " 永遠顯示狀態欄
@@ -126,10 +127,12 @@ let g:javascript_plugin_flow = 1
 
 " NERDTree Settings
 : let g:NERDTreeWinSize=30
+: let g:NERDTreeChDirMode=2
 
 " set <leader>
 let mapleader = ","
 
+" 快速跳至定義
 nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <leader>gd :YcmCompleter GoToDeclaration<CR>
 
@@ -164,4 +167,3 @@ au BufNewFile,BufRead *.js,*.jsx
     \ set tabstop=2      |
     \ set softtabstop=2  |
     \ set shiftwidth=2
-
