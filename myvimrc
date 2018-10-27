@@ -6,13 +6,13 @@ call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }  " 在nerdtree中顯示git的檔案變化
 Plug 'airblade/vim-gitgutter'                                   " 顯示git的修改記錄
-Plug 'scrooloose/syntastic'           " 程式碼檢查
+"Plug 'scrooloose/syntastic'           " 程式碼檢查
+Plug 'w0rp/ale'                       " 程式碼檢查
 Plug 'vim-airline/vim-airline'        " 狀態欄
 Plug 'vim-airline/vim-airline-themes' " 狀態欄themes
 Plug 'Yggdroot/indentLine'            " 加入outline
 Plug 'pangloss/vim-javascript'        " javascript highlighting & indentation
 Plug 'mxw/vim-jsx'                    " jsx highlight
-Plug 'mhinz/vim-startify'             " start screen
 Plug 'morhetz/gruvbox'                " color theme
 Plug '/usr/local/opt/fzf'             " fzf
 Plug 'junegunn/fzf.vim'
@@ -31,7 +31,7 @@ filetype plugin indent on
 syntax on
 
 " true color
-if has("termguicolors")
+if has('termguicolors')
     " fix bug for vim
 "    set t_8f=^[[38;2;%lu;%lu;%lum
 "    set t_8b=^[[48;2;%lu;%lu;%lum
@@ -43,28 +43,29 @@ set t_Co=256
 colorscheme gruvbox   " theme
 
 set number  relativenumber           " 顯示相對行號
-set scrolloff=3       " 距離頂部和底部3行"
-set encoding=utf-8    " 編碼
-set fenc=utf-8        " 編碼
-set mouse=a           " 啟用鼠標
-set hlsearch          " 搜尋高亮
-set ignorecase        " 搜尋忽略大小寫
-set smartcase         " 但有大寫字母時不忽略
-set cindent           " 自動縮排
-"set textwidth=79      " 一行最大寬度
-set expandtab         " tab替換为空格键
-set confirm           " 遇到需確認動作時詢問
-set autowrite         " 失焦時自動存檔
-set autoread          " 檔案在其他地方修改時自動更新
-set showcmd           " 在右下角顯示現有命令
-set splitbelow        " More natural split opening
+set scrolloff=3        " 距離頂部和底部3行"
+set encoding=utf-8     " 編碼
+set fileencoding=utf-8 " 編碼
+set mouse=a            " 啟用鼠標
+set hlsearch           " 搜尋高亮
+set ignorecase         " 搜尋忽略大小寫
+set smartcase          " 但有大寫字母時不忽略
+set cindent            " 自動縮排
+"set textwidth=79       " 一行最大寬度
+set expandtab          " tab替換为空格键
+set confirm            " 遇到需確認動作時詢問
+set autowrite          " 失焦時自動存檔
+set autoread           " 檔案在其他地方修改時自動更新
+set showcmd            " 在右下角顯示現有命令
+set splitbelow         " More natural split opening
 set splitright
-set updatetime=100    " 設定vim-gitgutter的更新延遲時間
-set clipboard=unnamed " 共用系統剪貼簿
+set updatetime=100     " 設定vim-gitgutter的更新延遲時間
+set clipboard=unnamed  " 共用系統剪貼簿
 set switchbuf+=usetab,newtab  "將quickfix開至新tab上
-set fdm=indent        " 設定折疊
-set foldlevelstart=99 " 新打開文件時不折疊
-setlocal foldlevel=3  " 最高折疊3層
+set foldmethod=indent  " 設定折疊
+set foldlevelstart=99  " 新打開文件時不折疊
+setlocal foldlevel=3   " 最高折疊3層
+set backspace=indent,eol,start
 
 set wildignore=*/node_modules/*,*/dist/*  " 搜尋時排除位置
 set backupdir=~/.vim/backup//  " 讓vim 生成的~文件在指定位置
@@ -89,23 +90,49 @@ augroup numbertoggle
   autocmd!
   autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
   autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+  " 目前沒作用，進入nerdtree 的時候不要有行號
+  autocmd BufEnter,FocusGained 
+      \ autocmd FileType nerdtree set nonumber norelativenumber
 augroup END
 
-" 程式碼檢查設定
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_javascript_checkers = ['standard']
-let g:syntastic_javascript_standard_generic = 1
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_javascript_eslint_exec = 'eslint'
-let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': [] }
+" 刪除行尾多餘的空白
+function! PreciseTrimWhiteSpace()
+  " We need to save the view because the substitute command might
+  " or might not move the cursor, depending on whether it finds
+  " any whitespace.
+  let saved_view = winsaveview()
 
-" ==== vim-airline start ====
+  " Remove white space. Ignore not found errors. Don't change jumplist.
+  keepjumps '[,']s/\s\+$//e
+
+  " Move cursor back if necessary.
+  call winrestview(saved_view)
+endfunction
+
+augroup PreciseTrimWhiteSpace
+  autocmd!
+  autocmd InsertLeave * call PreciseTrimWhiteSpace()
+augroup end
+
+" 程式碼檢查設定
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 0
+"let g:syntastic_check_on_wq = 0
+"let g:syntastic_javascript_checkers = ['standard']
+"let g:syntastic_javascript_standard_generic = 1
+"let g:syntastic_javascript_checkers = ['eslint']
+"let g:syntastic_javascript_eslint_exec = 'eslint'
+"let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': [] }
+
+" ale程式碼檢查設定
+let g:ale_fixers = { 'javascript': ['prettier', 'eslint'], }
+let g:ale_fix_on_save = 1
+
+" ===== vim-airline start ======
 set laststatus=2    " 永遠顯示狀態欄
 let g:airline_powerline_fonts = 1    " 支援 powerline 字體
 let g:airline#extensions#tabline#enabled = 1 " 顯示 tab 視窗及 buffer
@@ -120,25 +147,26 @@ let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#tabline#buffer_nr_show = 0
 let g:airline#extensions#branch#enabled = 1
+" let g:airline#extensions#ale#enabled = 1
 
 let g:airline_theme='bubblegum'
-" ==== vim-ariline End ====
+" ==============================
 
-" ==== YCM start ====
+" ======== YCM start ===========
 set completeopt=longest,menu
 let g:ycm_goto_buffer_command = 'horizontal-split'
-" ==== YCM end  ====
+" ==============================
 
 " ==== vim-javascript start ====
 let g:javascript_plugin_flow = 1
-" ==== vim-javascript End ====
+" ==============================
 
 " NERDTree Settings
 : let g:NERDTreeWinSize=30
 : let g:NERDTreeChDirMode=2
 
 " set <leader>
-let mapleader = ","
+let mapleader = ','
 
 " 快速跳至定義
 nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
@@ -152,7 +180,7 @@ nnoremap <silent> <F5> :NERDTreeToggle<CR>
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " <C-w>E 啟動語法檢查
-nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
+" nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
 
 " 快速切換視窗
 nnoremap <C-J> <C-W><C-J>
@@ -160,18 +188,25 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" 開啟.py 時使用下列設定
-au BufNewFile,BufRead *.py
-    \ set fileformat=unix |  " 保存文件格式
-    \ set tabstop=4       |  " tab 寬度
-    \ set softtabstop=4   |
-    \ set shiftwidth=4
-    \ set textwidth=79
-    \ set expandtab
-    \ set autoindent
+" 調整 window 大小
+nnoremap <silent> <Leader>wh :vertical resize +10<CR>
+nnoremap <silent> <Leader>wl :vertical resize -10<CR>
 
-" 開啟.js .jsx 時使用下列設定
-au BufNewFile,BufRead *.js,*.jsx
-    \ set tabstop=2      |
-    \ set softtabstop=2  |
-    \ set shiftwidth=2
+augroup filetypeSet
+        autocmd!
+        " 開啟.py 時使用下列設定
+        au BufNewFile,BufRead *.py
+            \ set fileformat=unix |  " 保存文件格式
+            \ set tabstop=4       |  " tab 寬度
+            \ set softtabstop=4   |
+            \ set shiftwidth=4
+            \ set textwidth=79
+            \ set expandtab
+            \ set autoindent
+
+        " 開啟.js .jsx 時使用下列設定
+        au BufNewFile,BufRead *.js,*.jsx,*.lua
+            \ set tabstop=2      |
+            \ set softtabstop=2  |
+            \ set shiftwidth=2
+augroup END
