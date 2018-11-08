@@ -15,6 +15,7 @@ Plug 'pangloss/vim-javascript'        " javascript highlighting & indentation
 Plug 'mxw/vim-jsx'                    " jsx highlight
 Plug 'morhetz/gruvbox'                " color theme
 Plug '/usr/local/opt/fzf'             " fzf
+Plug 'pearofducks/ansible-vim'        " syntax highlight for ansible
 Plug 'junegunn/fzf.vim'
 " YCM 自動補齊
 Plug 'Valloric/YouCompleteMe', {'on': []}
