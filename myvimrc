@@ -4,7 +4,7 @@ filetype off
 call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }  " 在nerdtree中顯示git的檔案變化
-Plug 'airblade/vim-gitgutter'                                   " 顯示git的修改記錄
+Plug 'airblade/vim-gitgutter'         " 在最左側顯示git的修改記錄
 Plug 'tpope/vim-fugitive'             " git 的增強 Plugin
 Plug 'w0rp/ale'                       " 程式碼檢查
 Plug 'Yggdroot/indentLine'            " 加入outline
@@ -22,6 +22,8 @@ Plug 'Raimondi/delimitMate'           " autocomplete for quotes, brackets, etc
 Plug 'sickill/vim-pasta'              " enhanced paste
 Plug 'tpope/vim-surround'             " delete, change and insert surroundings
 Plug 'lifepillar/vim-mucomplete'      " Completion wrapper
+Plug 'ludovicchabant/vim-gutentags'   " for ctags
+Plug 'easymotion/vim-easymotion'      " for motion
 call plug#end()
 
 filetype plugin indent on
@@ -67,7 +69,7 @@ set langmenu=en_US     " 設定語言
 let $LANG='en_US'
 
 " tab, end, trail space
-set list listchars=eol:¬,tab:▸\ ,trail:., " 顯示tab, 行尾空格, 行結束符
+set list listchars=eol:¬,tab:▸\ ,trail:▵, " 顯示tab, 行尾空格, 行結束符
 
 " fold
 set foldmethod=indent  " 設定折疊
@@ -128,7 +130,8 @@ let &t_EI = "\<Esc>[2 q"
 " need installed silver-searcher
 if executable('ag')
   " set grepprg=ag\ --nogroup\ --nocolor\ --ignore\ node_modules
-  set grepprg=ag\ --nogroup\ --ignore\ node_modules
+  " set grepprg=ag\ --nogroup\ --ignore\ node_modules
+  set grepprg=ag
 
   " Use CtrlP for listing files
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
@@ -140,10 +143,20 @@ if executable('ag')
 endif
 
 " ===== ale =====
+
 let g:ale_fixers = {
 \       '*': ['remove_trailing_lines', 'trim_whitespace'],
 \       'javascript': ['prettier', 'eslint'],
 \}
+
+let g:ale_linters = {
+\   'javascript':['eslint'],
+\}
+" Only run linters named in ale_linters settings.
+let g:ale_linters_explicit = 1
+" for go to define
+let g:ale_completion_enabled = 1
+
 "let g:ale_fix_on_save = 1
 " let g:ale_completion_enabled = 1
 noremap <Leader>gd :ALEGoToDefinition<CR>
@@ -154,13 +167,16 @@ noremap <leader>fix :ALEFix<CR>
 " ===== vim-airline start ======
 let g:airline_powerline_fonts = 1    " 支援 powerline 字體
 
-
 let g:airline#extensions#tabline#enabled = 1 " 顯示 tab 視窗及 buffer
 let g:airline#extensions#tabline#show_buffers = 0
-let g:airline#extensions#tabline#show_tab_type = 0
+let g:airline#extensions#tabline#show_splits = 0
+let g:airline#extensions#tabline#show_tabs = 1
 let g:airline#extensions#tabline#show_tab_nr = 1
+let g:airline#extensions#tabline#show_tab_type = 0
 let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#tabline#buffer_nr_show = 0
+
+let g:airline#extensions#bufferline#enabled = 0
 
 let g:airline#extensions#branch#enabled = 1
 " let g:airline#extensions#ale#enabled = 1
@@ -198,6 +214,10 @@ nmap <leader>nc <Plug>GitGutterNextHunk
 nmap <leader>pc <Plug>GitGutterPrevHunk
 " =======================
 
+" ==== ctags ====
+nnoremap <silent><C-]> <C-w><C-]><C-w>T
+
+"========================
 
 " 折行移動
 nnoremap j gj
@@ -229,6 +249,8 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 nnoremap ,tp :call MoveToPrevTab()<CR>
 nnoremap ,tn :call MoveToNextTab()<CR>
 nnoremap ,tc :tabclose<CR>
+
+nnoremap ,op c:vsp#<CR>
 
 " hard way
 " Vimscript file settings ---------------------- {{{
