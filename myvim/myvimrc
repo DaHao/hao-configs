@@ -24,6 +24,7 @@ Plug 'tpope/vim-surround'             " delete, change and insert surroundings
 Plug 'lifepillar/vim-mucomplete'      " Completion wrapper
 Plug 'ludovicchabant/vim-gutentags'   " for ctags
 Plug 'easymotion/vim-easymotion'      " for motion
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' } " vim golang plugin
 call plug#end()
 
 filetype plugin indent on
@@ -126,7 +127,28 @@ let &t_EI = "\<Esc>[2 q"
 " Package Setting
 " *******************************
 
-" ===== Silver Searcher =====
+"==============================================================================
+" vim-go 插件
+"==============================================================================
+let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
+let g:go_autodetect_gopath = 1
+let g:go_list_type = "quickfix"
+
+let g:go_version_warning = 1
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_generate_tags = 1
+
+let g:godef_split=2
+
+" =============================================================================
+" Silver Searcher
+" =============================================================================
 " need installed silver-searcher
 if executable('ag')
   " set grepprg=ag\ --nogroup\ --nocolor\ --ignore\ node_modules
@@ -142,7 +164,9 @@ if executable('ag')
 
 endif
 
-" ===== ale =====
+" =============================================================================
+" ale
+" =============================================================================
 
 let g:ale_fixers = {
 \       '*': ['remove_trailing_lines', 'trim_whitespace'],
@@ -163,8 +187,9 @@ noremap <Leader>gd :ALEGoToDefinition<CR>
 noremap <Leader>gr :ALEFindReferences<CR>
 noremap <leader>fix :ALEFix<CR>
 
-"
-" ===== vim-airline start ======
+" =============================================================================
+" vim-airline start
+" =============================================================================
 let g:airline_powerline_fonts = 1    " 支援 powerline 字體
 
 let g:airline#extensions#tabline#enabled = 1 " 顯示 tab 視窗及 buffer
@@ -189,7 +214,9 @@ endif
 let g:airline_theme='bubblegum'
 
 
-" ==== NERDTree Settings ====
+" =============================================================================
+" NERDTree Settings
+" =============================================================================
 let g:NERDTreeWinSize=25
 let g:NERDTreeChDirMode=2
 let g:NERDTreeShowHidden=1
@@ -199,12 +226,9 @@ nnoremap <leader>nt :NERDTreeToggle<CR>
 " 切換到該文件在 NERDTree 中的位置
 nnoremap <leader>nf :NERDTreeFind<cr>
 
-" ===========================
-
-let g:ansible_template_syntaxes = { '*.ldif.j2': 'ldif' }
-
-
-" ==== vim-gitgutter ====
+" =============================================================================
+" vim-gitgutter ====
+" =============================================================================
 if exists('&signcolumn')
   set signcolumn=yes
 else
@@ -212,13 +236,16 @@ else
 endif
 nmap <leader>nc <Plug>GitGutterNextHunk
 nmap <leader>pc <Plug>GitGutterPrevHunk
-" =======================
 
-" ==== ctags ====
+" =============================================================================
+" ctags
+" =============================================================================
 nnoremap <silent><C-]> <C-w><C-]><C-w>T
 
-"========================
 
+" *****************************************************************************
+" movement
+" *****************************************************************************
 " 折行移動
 nnoremap j gj
 nnoremap k gk
@@ -293,6 +320,14 @@ augroup filetypeSet
 
         " 開啟 javascript 檔時，套用以下快捷鍵
         "au FileType javascript nnoremap <buffer> <localleader>c _i//<esc>
+        "
+
+        " 開啟.go 時使用下列設定
+        au BufNewFile,BufRead *.go
+            \ set tabstop=4     |
+            \ set shiftwidth=4  |
+            \ set expandtab     |
+            \ set autoindent 
 augroup END
 
 " ------ Function Block -----
