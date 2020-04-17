@@ -4,27 +4,52 @@ filetype off
 call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }  " 在nerdtree中顯示git的檔案變化
-Plug 'airblade/vim-gitgutter'         " 在最左側顯示git的修改記錄
+Plug 'airblade/vim-gitgutter'         " 在文件最左側顯示git的修改記錄
 Plug 'tpope/vim-fugitive'             " git 的增強 Plugin
-Plug 'w0rp/ale'                       " 程式碼檢查
+" Plug 'w0rp/ale'                     " 程式碼檢查
+Plug 'dense-analysis/ale'             " 程式碼檢查
 Plug 'Yggdroot/indentLine'            " 加入outline
-Plug 'vim-airline/vim-airline'        " 狀態欄
-Plug 'vim-airline/vim-airline-themes' " 狀態欄themes
-"Plug 'pearofducks/ansible-vim'        " syntax highlight for ansible
-Plug 'pangloss/vim-javascript'        " javascript highlighting & indentation
-Plug 'othree/javascript-libraries-syntax.vim' " Syntax for some JS libraries
-Plug 'mxw/vim-jsx'                    " jsx highlight
-Plug 'towolf/vim-helm'                " highlight helm
-Plug 'morhetz/gruvbox'                " color theme
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' } " vim golang plugin
+" Plug 'pangloss/vim-javascript'        " javascript highlighting & indentation
+" Plug 'othree/javascript-libraries-syntax.vim' " Syntax for some JS libraries
+" Plug 'mxw/vim-jsx'                    " jsx highlight
+" Plug 'towolf/vim-helm'                " highlight helm
+" Plug 'leafgarland/typescript-vim'     " typescript highlight
+" Plug 'pearofducks/ansible-vim'        " syntax highlight for ansible
+Plug 'sheerun/vim-polyglot'           " A collection of language packs highlight for Vim
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'Raimondi/delimitMate'           " autocomplete for quotes, brackets, etc
-Plug 'sickill/vim-pasta'              " enhanced paste
+" Plug 'Raimondi/delimitMate'           " autocomplete for quotes, brackets, etc
+" Plug 'sickill/vim-pasta'              " enhanced paste
 Plug 'tpope/vim-surround'             " delete, change and insert surroundings
 Plug 'lifepillar/vim-mucomplete'      " Completion wrapper
 Plug 'ludovicchabant/vim-gutentags'   " for ctags
 Plug 'easymotion/vim-easymotion'      " for motion
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' } " vim golang plugin
+Plug 'mileszs/ack.vim'                " integration with ag
+" Plug 'vim-airline/vim-airline'        " 狀態欄
+" Plug 'vim-airline/vim-airline-themes' " 狀態欄themes
+
+" ==========================
+" theme
+" ==========================
+Plug 'morhetz/gruvbox'                " color theme
+" Plug 'crusoexia/vim-monokai'
+
+" ==========================
+" auto complete
+" ==========================
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" ==========================
+" deoplete
+" ==========================
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'wokalski/autocomplete-flow'
+" Plug 'roxma/nvim-yarp'
+" Plug 'roxma/vim-hug-neovim-rpc'
+" " For func argument completion
+" Plug 'Shougo/neosnippet'
+" Plug 'Shougo/neosnippet-snippets' 
 call plug#end()
 
 filetype plugin indent on
@@ -73,8 +98,12 @@ let $LANG='en_US'
 set list listchars=eol:¬,tab:▸\ ,trail:▵, " 顯示tab, 行尾空格, 行結束符
 
 " fold
-" set foldmethod=indent  " 設定折疊
-" set foldlevel=1
+" set foldmethod=syntax  " 設定折疊
+" set foldcolumn=1
+set foldmethod=indent
+set foldnestmax=3
+" set javaScript_fold=1
+set foldlevel=99
 
 " operation
 set confirm            " 遇到需確認動作時詢問
@@ -87,9 +116,13 @@ set matchtime=1        " 顯示括號配對位置
 
 set showcmd            " 在右下角顯示現有命令
 set clipboard=unnamed  " 共用系統剪貼簿
-set switchbuf+=usetab,newtab  "將quickfix開至新tab上
+" set switchbuf+=usetab,newtab  "將quickfix開至新tab上
 set omnifunc=syntaxcomplete#Complete
 set completeopt+=menuone  " for vim-mucomplete"
+set showtabline=2      " alway show tab bar
+
+" status bar
+set statusline=%f\ [%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%=%c,%l/%L\ %P
 
 
 " **************************
@@ -97,7 +130,7 @@ set completeopt+=menuone  " for vim-mucomplete"
 " **************************
 syntax on
 set ruler
-set number             " 顯示相對行號
+set number             " 顯示行號
 set conceallevel=0     " show quote in json file, it doesn't work
 
 " colorful
@@ -105,9 +138,9 @@ if has('termguicolors')
     set termguicolors  " enable true color
 endif
 
+
 set t_Co=256
 colorscheme gruvbox   " theme
-"colorscheme codedark   " theme
 
 " Scroll
 set scrolloff=3        " 距離頂部和底部3行
@@ -121,30 +154,47 @@ let &t_SI = "\<Esc>[6 q"
 let &t_SR = "\<Esc>[4 q"
 let &t_EI = "\<Esc>[2 q"
 
+"if exists('$TMUX')
+"    set term=screen-256color
+"endif
 
 
 " *******************************
 " Package Setting
 " *******************************
 
+
+"==============================================================================
+" deoplete plugin
+"==============================================================================
+" let g:deoplete#enable_at_startup = 1
+" let g:neosnippet#enable_completed_snippet = 1
+" let g:autocomplete_flow#insert_paren_after_function = 0
+" call deoplete#custom#option('auto_complete_delay', 300)
+ 
 "==============================================================================
 " vim-go 插件
 "==============================================================================
-let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
-let g:go_autodetect_gopath = 1
-let g:go_list_type = "quickfix"
-
-let g:go_version_warning = 1
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_generate_tags = 1
-
-let g:godef_split=2
+" let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
+" let g:go_autodetect_gopath = 1
+" let g:go_list_type = "quickfix"
+" 
+" let g:go_version_warning = 1
+" let g:go_highlight_types = 1
+" let g:go_highlight_fields = 1
+" let g:go_highlight_functions = 1
+" let g:go_highlight_function_calls = 1
+" let g:go_highlight_operators = 1
+" let g:go_highlight_extra_types = 1
+" let g:go_highlight_methods = 1
+" let g:go_highlight_generate_tags = 1
+" 
+" let g:godef_split=2
+" 
+" =============================================================================
+" fzf.vim
+" =============================================================================
+nnoremap <silent><c-p> :Files<CR>
 
 " =============================================================================
 " Silver Searcher
@@ -154,6 +204,7 @@ if executable('ag')
   " set grepprg=ag\ --nogroup\ --nocolor\ --ignore\ node_modules
   " set grepprg=ag\ --nogroup\ --ignore\ node_modules
   set grepprg=ag
+  let g:ackprg = 'ag --vimgrep --nogroup --nocolor --column'
 
   " Use CtrlP for listing files
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
@@ -161,8 +212,11 @@ if executable('ag')
   " no cache
   " 我們大菁英sliver serch不需要cache加快速度
   let g:ctrlp_use_caching = 0
-
 endif
+
+let g:ackhighlight = 1
+let g:ack_qhandler = "botright copen 15"
+let g:ack_autoclose = 1
 
 " =============================================================================
 " ale
@@ -190,28 +244,28 @@ noremap <leader>fix :ALEFix<CR>
 " =============================================================================
 " vim-airline start
 " =============================================================================
-let g:airline_powerline_fonts = 1    " 支援 powerline 字體
-
-let g:airline#extensions#tabline#enabled = 1 " 顯示 tab 視窗及 buffer
-let g:airline#extensions#tabline#show_buffers = 0
-let g:airline#extensions#tabline#show_splits = 0
-let g:airline#extensions#tabline#show_tabs = 1
-let g:airline#extensions#tabline#show_tab_nr = 1
-let g:airline#extensions#tabline#show_tab_type = 0
-let g:airline#extensions#tabline#tab_nr_type = 1
-let g:airline#extensions#tabline#buffer_nr_show = 0
-
-let g:airline#extensions#bufferline#enabled = 0
-
-let g:airline#extensions#branch#enabled = 1
-" let g:airline#extensions#ale#enabled = 1
-
-
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-
-let g:airline_theme='bubblegum'
+" let g:airline_powerline_fonts = 1    " 支援 powerline 字體
+" 
+" let g:airline#extensions#tabline#enabled = 1 " 顯示 tab 視窗及 buffer
+" let g:airline#extensions#tabline#show_buffers = 0
+" let g:airline#extensions#tabline#show_splits = 0
+" let g:airline#extensions#tabline#show_tabs = 1
+" let g:airline#extensions#tabline#show_tab_nr = 1
+" let g:airline#extensions#tabline#show_tab_type = 0
+" let g:airline#extensions#tabline#tab_nr_type = 1
+" let g:airline#extensions#tabline#buffer_nr_show = 0
+" 
+" let g:airline#extensions#bufferline#enabled = 0
+" 
+" let g:airline#extensions#branch#enabled = 1
+" " let g:airline#extensions#ale#enabled = 1
+" 
+" 
+" if !exists('g:airline_symbols')
+"     let g:airline_symbols = {}
+" endif
+" 
+" let g:airline_theme='bubblegum'
 
 
 " =============================================================================
@@ -224,7 +278,19 @@ let g:NERDTreeShowHidden=1
 " map :NERDTree
 nnoremap <leader>nt :NERDTreeToggle<CR>
 " 切換到該文件在 NERDTree 中的位置
-nnoremap <leader>nf :NERDTreeFind<cr>
+" nnoremap <leader>nf :NERDTree<CR><C-W><C-L>:NERDTreeFind<cr>
+nnoremap <leader>nf :call FindNERDTree()<CR>
+function! FindNERDTree()
+  if exists("g:NERDTree")
+    echom "nerdtree exist"
+    execute "NERDTreeFind"
+  else
+    echom "nerdtree not"
+    execute "NERDTree"
+    execute "normal! \<C-W>\<C-L>"
+    execute "NERDTreeFind"
+  endif
+endfunction
 
 " =============================================================================
 " vim-gitgutter ====
@@ -234,14 +300,21 @@ if exists('&signcolumn')
 else
   let g:gitgutter_sign_column_always = 1
 endif
-nmap <leader>nc <Plug>GitGutterNextHunk
-nmap <leader>pc <Plug>GitGutterPrevHunk
+nmap <leader>nc <Plug>(GitGutterNextHunk)
+nmap <leader>pc <Plug>(GitGutterPrevHunk)
 
 " =============================================================================
 " ctags
 " =============================================================================
 nnoremap <silent><C-]> <C-w><C-]><C-w>T
 
+
+" =============================================================================
+" vim-fugitive
+" =============================================================================
+nnoremap <leader>st :Gstatus<CR>:resize 15<CR>
+nnoremap <leader>di :Gvdiff<CR>
+nnoremap <leader>add :Gwrite<CR>
 
 " *****************************************************************************
 " movement
@@ -268,8 +341,11 @@ nnoremap <silent> <Leader>vp :vertical resize +10<CR>
 inoremap jk <esc>
 vnoremap jk <esc>
 
+" (visual mode) 貼上後維持原複製字串
+vnoremap p pyaw
+
 " 快速編輯.vimrc
-nnoremap <leader>ev :vsp $MYVIMRC<cr>
+nnoremap <leader>ev :tabnew $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " combine Tabs
@@ -277,15 +353,21 @@ nnoremap ,tp :call MoveToPrevTab()<CR>
 nnoremap ,tn :call MoveToNextTab()<CR>
 nnoremap ,tc :tabclose<CR>
 
+" search for next word, put cursor in middle of window
+nnoremap n nzz
+nnoremap N Nzz
+nnoremap * *zz
+nnoremap # #zz
+nnoremap g* g*zz
+nnoremap g# g#zz
+
 nnoremap ,op c:vsp#<CR>
 
-" hard way
-" Vimscript file settings ---------------------- {{{
-augroup filetype_vim
-        autocmd!
-        autocmd FileType vim setlocal foldmethod=marker
+augroup openQuickfix
+  autocmd!
+  autocmd FileType qf 
+        \ nnoremap <buffer> <leader>qt <C-w><Enter><C-w>L
 augroup END
-" }}}
 
 augroup closeNerdTree
         autocmd!
@@ -318,9 +400,10 @@ augroup filetypeSet
             \ set shiftwidth=2   |
             \ set autoindent
 
-        " 開啟 javascript 檔時，套用以下快捷鍵
-        "au FileType javascript nnoremap <buffer> <localleader>c _i//<esc>
-        "
+        " 開啟.json 時使用下列設定
+        au BufNewFile,BufRead *.json
+            \ let g:indentLine_conceallevel = 0 " show quote in json file, but indentLine will not work
+
 
         " 開啟.go 時使用下列設定
         au BufNewFile,BufRead *.go
@@ -328,6 +411,14 @@ augroup filetypeSet
             \ set shiftwidth=4  |
             \ set expandtab     |
             \ set autoindent 
+augroup END
+
+augroup lastEdit
+  autocmd!
+  autocmd BufReadPost *
+  \ if line("'\"") > 0 && line("'\"") <= line('$') |
+  \   exe "normal! g`\"" |
+  \ endif
 augroup END
 
 " ------ Function Block -----
@@ -344,7 +435,7 @@ function MoveToPrevTab()
     if l:tab_nr == tabpagenr('$')
       tabprev
     endif
-    sp
+    vs
   else
     close!
     exe "0tabnew"
@@ -366,7 +457,7 @@ function MoveToNextTab()
     if l:tab_nr == tabpagenr('$')
       tabnext
     endif
-    sp
+    vs
   else
     close!
     tabnew
