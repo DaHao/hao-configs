@@ -9,7 +9,9 @@ Plug 'tpope/vim-fugitive'             " git 的增強 Plugin
 " Plug 'w0rp/ale'                     " 程式碼檢查
 Plug 'dense-analysis/ale'             " 程式碼檢查
 Plug 'Yggdroot/indentLine'            " 加入outline
+
 " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' } " vim golang plugin
+
 " Plug 'pangloss/vim-javascript'        " javascript highlighting & indentation
 " Plug 'othree/javascript-libraries-syntax.vim' " Syntax for some JS libraries
 " Plug 'mxw/vim-jsx'                    " jsx highlight
@@ -175,11 +177,13 @@ let &t_EI = "\<Esc>[2 q"
 "==============================================================================
 " vim-go 插件
 "==============================================================================
+" noremap <leader>golt :GoLint<CR>
 " let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
+" let g:go_fmt_autosave = 1
 " let g:go_autodetect_gopath = 1
 " let g:go_list_type = "quickfix"
-" 
-" let g:go_version_warning = 1
+"" " 
+" " let g:go_version_warning = 1
 " let g:go_highlight_types = 1
 " let g:go_highlight_fields = 1
 " let g:go_highlight_functions = 1
@@ -188,9 +192,9 @@ let &t_EI = "\<Esc>[2 q"
 " let g:go_highlight_extra_types = 1
 " let g:go_highlight_methods = 1
 " let g:go_highlight_generate_tags = 1
-" 
+" " 
 " let g:godef_split=2
-" 
+ " 
 " =============================================================================
 " fzf.vim
 " =============================================================================
@@ -224,16 +228,25 @@ let g:ack_autoclose = 1
 
 let g:ale_fixers = {
 \       '*': ['remove_trailing_lines', 'trim_whitespace'],
-\       'javascript': ['prettier', 'eslint'],
+\       'javascript': ['eslint'],
 \}
+" \       'javascript': ['prettier', 'eslint'],
 
 let g:ale_linters = {
 \   'javascript':['eslint'],
 \}
+"    'go':['golint', 'go vet', 'go build'],
+
+" disable ale lsp feat. cuz coc.vim will do it
+let g:ale_disable_lsp = 1
+
 " Only run linters named in ale_linters settings.
-let g:ale_linters_explicit = 1
+" let g:ale_linters_explicit = 1
+
 " for go to define
 let g:ale_completion_enabled = 1
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
 "let g:ale_fix_on_save = 1
 " let g:ale_completion_enabled = 1
@@ -274,6 +287,7 @@ noremap <leader>fix :ALEFix<CR>
 let g:NERDTreeWinSize=25
 let g:NERDTreeChDirMode=2
 let g:NERDTreeShowHidden=1
+let g:NERDTreeQuitOnOpen=1
 
 " map :NERDTree
 nnoremap <leader>nt :NERDTreeToggle<CR>
@@ -394,7 +408,7 @@ augroup filetypeSet
             \ set autoindent
 
         " 開啟.js .jsx 時使用下列設定
-        au BufNewFile,BufRead *.js,*.jsx,*.lua,*.html
+        au BufNewFile,BufRead *.js,*.jsx,*.ts,*.tsx,*.lua,*.html
             \ set tabstop=2      |
             \ set softtabstop=2  |
             \ set shiftwidth=2   |
@@ -402,6 +416,10 @@ augroup filetypeSet
 
         " 開啟.json 時使用下列設定
         au BufNewFile,BufRead *.json
+            \ set tabstop=4      |
+            \ set softtabstop=4  |
+            \ set shiftwidth=4   |
+            \ set autoindent     |
             \ let g:indentLine_conceallevel = 0 " show quote in json file, but indentLine will not work
 
 
