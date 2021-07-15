@@ -1,0 +1,73 @@
+/*****************************************************************************
+ * Rendered Markdown                                                         *
+ * Application styling is defined in `userchrome.css`                        *
+ * html-ized markdown
+ * designed originally by uxamanda (https://discourse.joplinapp.org/u/uxamanda).
+ * latest version https://github.com/amandamcg/joplin-theme
+ * Redesigned by Stephen (robotcorner) https://https://github.com/robotcorner/joplin-theme-dark-gruvbox
+ *****************************************************************************/
+
+:root {
+    --white: #fbf1c7;
+    --dark-white: #ebdbb2;
+    --light-grey: #928374;
+    --grey: #504945;
+    --dark-grey: #3c3836;
+    --darker-grey: #32302f;
+    --black: #181a1b;
+    --red: #fb4934;
+    --red-dark: #cc241d;
+    --green: #b8bb26;
+    --green-dark: #6ebb26;;
+    --yellow:#fabd2f;
+    --yellow-dark: #d79921;
+    --blue: #83a598;
+    --blue-dark: #458588;
+    --purple: #d3869b;
+    --purple-dark: #b16286;
+    --aqua: #8ec07c;
+    --aqua-dark: #689d6a;
+    --orange: #fe8019;
+    --orange-dark: #d65d0e;
+    --base-size-1: 1px;
+    --base-size-4: 5px;
+    --base-size-8: 9px;
+    --base-size-11: 11px;
+    --base-size-13: 13px;
+    --base-size-14: 14px;
+    --base-size-15: 15px;
+    --base-size-16: 16px;
+    --base-size-17: 17px;
+    --base-size-18: 18px;
+    --base-size-18: 19px;
+    --base-size-24: 24px;
+    --base-size-32: 32px;
+    --base-size-40: 40px;
+    --base-size-272: 272px;
+    --z-toc: 99;
+    --font-weight-light: 200;
+    --font-weight-base: 400;
+    --font-weight-base-extra: 500;
+    --font-weight-bold: 600;
+    --font-title: "Work Sans";
+    --font-sans: "Work Sans";
+    --font-mono: "Cascadia Code";
+    --font-default: "jf open 粉圓 1.1", monospace !important;
+    --primary: var(--yellow);
+    --secondary: var(--yellow);
+    --font-line-height: 1.4em;
+    --font-size: var(--base-size-17);
+    --icon-size: var(--font-size);
+}
+
+body, th, td, p.inline-code {
+        font-family: var(--font-default);
+}
+
+/*
+.hljs {
+    background-color: black;
+    padding: var(--base-size-18);
+    border-radius: var(--base-size-4) !important;
+}
+*/

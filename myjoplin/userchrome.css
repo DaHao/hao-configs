@@ -1,0 +1,95 @@
+/*****************************************************************************************
+ * For styling the entire Joplin app
+ * (except the rendered Markdown, which is defined in `userstyle.css`)
+ * https://dev.to/georgedoescode/a-beginner-s-guide-to-applying-color-in-ui-design-3904
+ * html-ized markdown for entire app
+ * designed originally by uxamanda (https://discourse.joplinapp.org/u/uxamanda).
+ * latest version https://github.com/amandamcg/joplin-theme
+ * Redesigned by Stephen (robotcorner) https://https://github.com/robotcorner/joplin-theme-dark-gruvbox
+ *****************************************************************************************/
+
+:root {
+    --white: #fbf1c7;
+    --dark-white: #ebdbb2;
+    --light-grey: #928374;
+    --grey: #504945;
+    --dark-grey: #3c3836;
+    --darker-grey: #32302f;
+    --black: #181a1b;
+    --red: #fb4934;
+    --red-dark: #cc241d;
+    --green: #b8bb26;
+    --green-dark: #6ebb26;
+    --yellow:#fabd2f;
+    --yellow-dark: #d79921;
+    --yellow-darkest: #c47f00;
+    --blue: #83a598;
+    --blue-dark: #458588;
+    --purple: #d3869b;
+    --purple-dark: #b16286;
+    --aqua: #8ec07c;
+    --aqua-dark: #689d6a;
+    --aqua-very-dark: #477248;
+    --orange: #fe8019;
+    --orange-dark: #d65d0e;
+
+    --base-size-1: 1px;
+    --base-size-4: 5px;
+    --base-size-8: 9px;
+    --base-size-10: 11px;
+    --base-size-14: 14px;
+    --base-size-16: 16px;
+    --base-size-18: 18px;
+    --base-size-24: 24px;
+    --base-size-32: 32px;
+    --base-size-40: 40px;
+    --base-size-272: 272px;
+    --z-toc: 99;
+    --font-weight-light: 200;
+    --font-weight-base: 400;
+    --font-weight-bold: 500;
+    --font-sans: "Work Sans";
+    --font-mono: "Cascadia Code";
+    --font-default: "jf open 粉圓 1.1", monospace !important;
+    --primary: var(--purple);
+    --secondary: var(--orange-dark);
+    --font-line-height: 1.4em;
+    --font-size: var(--base-size-16);
+    --icon-size: var(--font-size);
+}
+
+* {
+    font-family: var(--font-default) !important;
+}
+
+.fa, .far, .fas {
+    font-family: "Font Awesome 5 Free" !important;
+}
+
+/*
+* {
+    font-family: var(--font-default) !important;
+    font-weight: var(--font-weight-base) !important;
+    font-size: var(--font-size) !important;
+    line-height: var(--font-line-height) !important;
+}
+
+.fa, .far, .fas {
+    font-weight: 900 !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-size: var(--icon-size) !important;
+}
+
+body {
+    background-color: var(--black) !important;
+    font-size: var(--base-size-16) !important;
+}
+
+.noteTextViewer {
+    border-left: var(--base-size-1) solid var(--dark-grey) !important;
+}
+
+.cm-header {
+        color: var(--editor-heading-color) !immport;
+}
+*/
