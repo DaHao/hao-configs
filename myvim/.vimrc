@@ -142,7 +142,8 @@ endif
 
 
 set t_Co=256
-colorscheme gruvbox   " theme
+colorscheme gruvbox    " theme
+set background=dark    " 暗色系
 
 " Scroll
 set scrolloff=3        " 距離頂部和底部3行
@@ -198,7 +199,7 @@ let &t_EI = "\<Esc>[2 q"
 " =============================================================================
 " fzf.vim
 " =============================================================================
-nnoremap <silent><c-p> :Files<CR>
+nnoremap <silent><c-p> :GFiles<CR>
 
 " =============================================================================
 " Silver Searcher
@@ -365,7 +366,7 @@ nnoremap <leader>sv :source $MYVIMRC<cr>
 " combine Tabs
 nnoremap ,tp :call MoveToPrevTab()<CR>
 nnoremap ,tn :call MoveToNextTab()<CR>
-nnoremap ,tc :tabclose<CR>
+" nnoremap ,tc :tabclose<CR>
 
 " search for next word, put cursor in middle of window
 nnoremap n nzz
@@ -376,6 +377,8 @@ nnoremap g* g*zz
 nnoremap g# g#zz
 
 nnoremap ,op c:vsp#<CR>
+" close tabs follow the current tab
+nnoremap ,tcr :.+1,$tabdo :tabc<CR>
 
 augroup openQuickfix
   autocmd!
