@@ -31,6 +31,8 @@ Plug 'easymotion/vim-easymotion'      " for motion
 Plug 'mileszs/ack.vim'                " integration with ag
 " Plug 'vim-airline/vim-airline'        " 狀態欄
 " Plug 'vim-airline/vim-airline-themes' " 狀態欄themes
+" Plug 'wfxr/minimap.vim'               " scrollbar map
+Plug 'obcat/vim-sclow'                  " scrollbar
 
 " ==========================
 " theme
@@ -62,9 +64,9 @@ filetype plugin indent on
 " **************************
 
 " Encoding
-set encoding=utf-8       " 編碼
-set fileencoding=utf-8   " 編碼
-set fileencodings=utf-8  " 編碼
+" set encoding=utf-8       " 編碼
+" set fileencoding=utf-8   " 編碼
+" set fileencodings=utf-8  " 編碼
 
 " Fix backspace indent
 set backspace=indent,eol,start
@@ -125,7 +127,8 @@ set completeopt+=menuone  " for vim-mucomplete"
 set showtabline=2      " alway show tab bar
 
 " status bar
-set statusline=%f\ [%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%=%c,%l/%L\ %P
+" set statusline=%f\ [%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%=%c,%l/%L\ %P
+set statusline=%f\ [%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%=%c,%l/%L
 
 
 " **************************
@@ -243,7 +246,7 @@ let g:ale_linters = {
 let g:ale_disable_lsp = 1
 
 " Only run linters named in ale_linters settings.
-" let g:ale_linters_explicit = 1
+let g:ale_linters_explicit = 1
 
 " for go to define
 let g:ale_completion_enabled = 1
@@ -328,10 +331,27 @@ nnoremap <silent><C-]> <C-w><C-]><C-w>T
 " =============================================================================
 " vim-fugitive
 " =============================================================================
-nnoremap <leader>st :Gstatus<CR>:resize 15<CR>
+nnoremap <leader>st :G<CR>:resize 15<CR>
 nnoremap <leader>di :Gvdiff<CR>
 nnoremap <leader>add :Gwrite<CR>
 
+" =============================================================================
+" vim-polyglot
+" =============================================================================
+let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
+
+"" =============================================================================
+"" minimap.vim
+"" =============================================================================
+" let g:minimap_width = 4
+" let g:minimap_auto_start = 1
+" let g:minimap_auto_start_win_enter = 1
+" let g:minimap_highlight_search = 1
+" let g:minimap_highlight_range = 1
+" nnoremap <silent> <Leader>mp :MinimapToggle<CR>
+"
 " *****************************************************************************
 " movement
 " *****************************************************************************
@@ -401,6 +421,9 @@ augroup filetypeSet
         " 開啟helm yaml, tpl 檔時，套用以下規則
         autocmd BufRead,BufNewFile */templates/*.yaml,*/templates/*.tpl set ft=helm
 
+        " 開啟 md 檔時，套用以下規則
+        " autocmd BufRead,BufNewFile *.md set cole=0
+
         " 開啟.py 時使用下列設定
         au BufNewFile,BufRead *.py
             \ set fileformat=unix |  " 保存文件格式
@@ -426,7 +449,6 @@ augroup filetypeSet
             \ set autoindent     |
             \ let g:indentLine_conceallevel = 0 " show quote in json file, but indentLine will not work
 
-
         " 開啟.go 時使用下列設定
         au BufNewFile,BufRead *.go
             \ set tabstop=4     |
@@ -435,13 +457,14 @@ augroup filetypeSet
             \ set autoindent 
 augroup END
 
-augroup lastEdit
-  autocmd!
-  autocmd BufReadPost *
-  \ if line("'\"") > 0 && line("'\"") <= line('$') |
-  \   exe "normal! g`\"" |
-  \ endif
-augroup END
+
+" augroup lastEdit
+"   autocmd!
+"   autocmd BufReadPost *
+"   \ if line("'\"") > 0 && line("'\"") <= line('$') |
+"   \   exe "normal! g`\"" |
+"   \ endif
+" augroup END
 
 " ------ Function Block -----
 function MoveToPrevTab()
