@@ -1,3 +1,4 @@
+let g:polyglot_disabled = ['markdown']
 set nocompatible " 關閉與vi的兼容模式
 filetype off
 
